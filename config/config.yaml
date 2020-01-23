@@ -1,0 +1,6 @@
+database:
+  host: localhost
+  user: telecaller
+  password: Prince@143$
+  database: telecaller
+  debug: true
