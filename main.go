@@ -5,6 +5,7 @@ import (
 
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	"github.com/princeparmar/telecaller-app/database"
+	_ "github.com/princeparmar/telecaller-app/model"
 )
 
 func main() {

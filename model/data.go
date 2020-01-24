@@ -14,68 +14,62 @@ type PKey struct {
 // Contact model to store the contact data.
 type Contact struct {
 	gorm.Model
-	Name                  string `sql:"type:varchar(32)"`
-	Email                 string `sql:"type:varchar(64);unique"`
-	Mobile                string `sql:"type:char(10);unique"`
-	Role                  string `sql:"type:varchar(16)"`
-	DesiredCity           string `sql:"type:varchar(16)"`
-	Education             string `sql:"type:varchar(64)"`
-	Company               string `sql:"type:varchar(64)"`
-	HasSystem             string `sql:"enum('laptop','desktop');DEFAULT:null"`
-	ComputerCertification string `sql:"type:varchar(64)"`
-	LastActive            time.Time
-	LocalityID            uint `sql:""`
-	Age                   uint
-	CurrentSalary         uint
-	MaxHEScore            uint
-	MinHEScode            uint
-	Experience            uint
-	TypingSpeed           uint
-	ITI                   bool
-	MsExcel               bool
-	Passport              bool
-	Adharcard             bool
+	Name                                      string `sql:"type:varchar(32);NOT NULL"`
+	Email                                     string `sql:"type:varchar(64);unique;NOT NULL"`
+	Mobile                                    string `sql:"type:char(10);unique;NOT NULL"`
+	Role, DesiredCity                         string `sql:"type:varchar(16)"`
+	Education, Company, ComputerCertification string `sql:"type:varchar(64)"`
+	HasSystem                                 string `sql:"type:varchar(8);DEFAULT:NULL"`
+	LastActive                                time.Time
+	LocalityID                                uint `fk:"localities(id)"`
+	Age, CurrentSalary, MaxHEScore            uint
+	MinHEScode, Experience, TypingSpeed       uint
+	ITI, MsExcel, Passport, Adharcard         bool
+}
+
+// FKContactID handels foreign key contact id in corresponding tables
+type FKContactID struct {
+	ContactID uint `fk:"contacts(id)"`
 }
 
 // ContactLanguage stores relation b/w contact and job_type
 type ContactLanguage struct {
-	ContactID  uint `sql:"unique('contact_id','language_id');foreignkey:contact('id')"`
-	LanguageID uint
+	FKContactID `sql:"NOT NULL"`
+	LanguageID  uint `unique:"unq_contact_language(contact_id,language_id)" fk:"languages(id)" sql:"NOT NULL"`
 }
 
 // ContactProof stores the proof relation with contact
 type ContactProof struct {
-	ContactID uint `sql:"uniq_proof('conatct_id')"`
-	ProofID   uint
+	FKContactID
+	ProofID uint `unique:"unq_contact_proof(contact_id,proof_id)" fk:"proofs(id)" sql:"NOT NULL"`
+}
+
+// ContactJobType stores relation b/w contact and job_type
+type ContactJobType struct {
+	FKContactID
+	JobTypeID uint `sql:"NOT NULL" unique:"unq_contact_job_type(contact_id,job_type_id)" fk:"job_types(id)"`
 }
 
 // Proof stores proof name
 type Proof struct {
 	PKey
-	Name string `sql:"varchar(16)"`
+	Name string `sql:"varchar(16);unique;NOT NULL"`
 }
 
 // Language module stores the languages
 type Language struct {
 	PKey
-	Language string `gorm:"type:varchar(8)"`
-}
-
-// ContactJobType stores relation b/w contact and job_type
-type ContactJobType struct {
-	ContactID uint `sql:"unique('contact_id','job_type_id')"`
-	JobTypeID uint
+	Language string `sql:"type:varchar(8);unique;NOT NULL"`
 }
 
 // JobType model stores all job type available
 type JobType struct {
 	PKey
-	Name string `sql:"type:varchar(16)"`
+	Name string `sql:"type:varchar(16);unique;NOT NULL"`
 }
 
 // Locality model stores Locality details of the contact
 type Locality struct {
 	PKey
-	City     string `sql:"type:varchar(16)"`
-	Locality string `sql:"type:varchar(16)"`
+	City, Locality string `sql:"type:varchar(16);unique;NOT NULL"`
 }
