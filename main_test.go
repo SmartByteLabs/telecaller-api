@@ -1,12 +1,13 @@
 package main
 
 import (
-	_ "github.com/jinzhu/gorm/dialects/mysql"
+	"testing"
+
 	"github.com/princeparmar/telecaller-app/controller"
 	"github.com/rightjoin/fuel"
 )
 
-func main() {
+func TestMainMethod(t *testing.T) {
 	server := fuel.NewServer()
 	server.AddService(&controller.UploaderService{})
 	server.Version = "1"

@@ -22,12 +22,15 @@ func init() {
 	defer dbo.Close()
 
 	dorm.OverrideDB = dbo
+
 	dorm.BuildSchema(
 		&Language{},
 		&Locality{},
 		&Proof{},
+		&ComputerCertification{},
 		&JobType{},
 		&Contact{},
+		&ContactComputerCertificate{},
 		&ContactJobType{},
 		&ContactLanguage{},
 		&ContactProof{},
